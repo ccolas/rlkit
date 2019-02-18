@@ -80,8 +80,8 @@ def experiment(variant):
 if __name__ == "__main__":
     variant = dict(
         algo_kwargs=dict(
-            num_epochs=5000,
-            num_steps_per_epoch=1000,
+            num_epochs=1000,
+            num_steps_per_epoch=5000,
             num_steps_per_eval=1000,
             max_path_length=50,
             batch_size=128,
