@@ -80,7 +80,7 @@ def experiment(variant):
 if __name__ == "__main__":
     variant = dict(
         algo_kwargs=dict(
-            num_epochs=100,
+            num_epochs=5000,
             num_steps_per_epoch=1000,
             num_steps_per_eval=1000,
             max_path_length=50,
@@ -93,5 +93,5 @@ if __name__ == "__main__":
             fraction_goals_env_goals=0.0,
         ),
     )
-    setup_logger('her-td3-fetch-experiment', variant=variant)
+    setup_logger('her-td3-push-experiment', variant=variant)
     experiment(variant)

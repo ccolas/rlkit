@@ -27,7 +27,7 @@ from rlkit.torch.sac.policies import TanhGaussianPolicy
 
 
 def experiment(variant):
-    env = gym.make('FetchReach-v1')
+    env = gym.make('FetchPush-v1')
     es = GaussianAndEpislonStrategy(
         action_space=env.action_space,
         max_sigma=.2,
@@ -91,7 +91,7 @@ def experiment(variant):
 if __name__ == "__main__":
     variant = dict(
         algo_kwargs=dict(
-            num_epochs=100,
+            num_epochs=5000,
             num_steps_per_epoch=1000,
             num_steps_per_eval=1000,
             max_path_length=50,
@@ -104,5 +104,5 @@ if __name__ == "__main__":
             fraction_goals_env_goals=0.0,
         ),
     )
-    setup_logger('her-tsac-fetch-experiment', variant=variant)
+    setup_logger('her-tsac-push-experiment', variant=variant)
     experiment(variant)
