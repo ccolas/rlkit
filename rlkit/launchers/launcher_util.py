@@ -13,7 +13,7 @@ import dateutil.tz
 import numpy as np
 
 from rlkit.core import logger
-from rlkit.launchers import config
+from rlkit.launchers import config_template as config
 from rlkit.torch.pytorch_util import set_gpu_mode
 import rlkit.pythonplusplus as ppp
 
