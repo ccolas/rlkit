@@ -20,12 +20,14 @@ from rlkit.exploration_strategies.gaussian_and_epsilon_strategy import (
     GaussianAndEpislonStrategy
 )
 from rlkit.launchers.launcher_util import setup_logger
-from rlkit.torch.her.her import HerTd3
+from rlkit.torch.her.her import HerTd3, HerTwinSAC
 from rlkit.torch.networks import FlattenMlp, TanhMlpPolicy
+from rlkit.torch.sac.policies import TanhGaussianPolicy
+
 
 
 def experiment(variant):
-    env = gym.make('FetchPush-v1')
+    env = gym.make('FetchReach-v1')
     es = GaussianAndEpislonStrategy(
         action_space=env.action_space,
         max_sigma=.2,
@@ -45,10 +47,15 @@ def experiment(variant):
         output_size=1,
         hidden_sizes=[400, 300],
     )
-    policy = TanhMlpPolicy(
-        input_size=obs_dim + goal_dim,
-        output_size=action_dim,
+    vf = FlattenMlp(
         hidden_sizes=[400, 300],
+        input_size=obs_dim + goal_dim,
+        output_size=1,
+    )
+    policy = TanhGaussianPolicy(
+        hidden_sizes=[400, 300],
+        obs_dim=obs_dim + goal_dim,
+        action_dim=action_dim,
     )
     exploration_policy = PolicyWrappedWithExplorationStrategy(
         exploration_strategy=es,
@@ -58,17 +65,21 @@ def experiment(variant):
         env=env,
         **variant['replay_buffer_kwargs']
     )
-    algorithm = HerTd3(
+    algorithm = HerTwinSAC(
         her_kwargs=dict(
             observation_key='observation',
             desired_goal_key='desired_goal'
         ),
-        td3_kwargs = dict(
+        tsac_kwargs = dict(
             env=env,
+            policy=policy,
             qf1=qf1,
             qf2=qf2,
-            policy=policy,
-            exploration_policy=exploration_policy
+            vf=vf,
+            soft_target_tau=0.001,
+            policy_lr=3E-4,
+            qf_lr=3E-4,
+            vf_lr=3E-4
         ),
         replay_buffer=replay_buffer,
         **variant['algo_kwargs']
@@ -93,5 +104,5 @@ if __name__ == "__main__":
             fraction_goals_env_goals=0.0,
         ),
     )
-    setup_logger('her-td3-fetch-experiment', variant=variant)
+    setup_logger('her-tsac-fetch-experiment', variant=variant)
     experiment(variant)
