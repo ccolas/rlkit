@@ -467,7 +467,8 @@ class RLAlgorithm(metaclass=abc.ABCMeta):
         if hasattr(self.env, "get_diagnostics"):
             statistics.update(self.env.get_diagnostics(test_paths))
 
-        average_returns = eval_util.get_average_returns(test_paths)
+        # average_returns = eval_util.get_average_returns(test_paths)
+        average_returns = eval_util.get_fetch_success(test_paths)
         statistics['AverageReturn'] = average_returns
         for key, value in statistics.items():
             logger.record_tabular(key, value)

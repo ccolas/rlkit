@@ -37,6 +37,10 @@ def get_average_returns(paths):
     returns = [sum(path["rewards"]) for path in paths]
     return np.mean(returns)
 
+def get_fetch_success(paths):
+    returns = [path['rewards'][-1]==0 for path in paths]
+    return np.mean(returns)
+
 
 def create_stats_ordered_dict(
         name,
